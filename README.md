@@ -2,6 +2,8 @@
 # Bigdata Pipeline - Data Engineering project
 The project objective is create the data lakehouse for a B2B company that must store the transactional and analytical data of the business.
 The final system must deliver structured, clean and consumable data across the business in order to generate reports and find opportunities.
+![image](https://user-images.githubusercontent.com/28696396/204111736-04a85c1f-e88b-41ab-9558-3a2a48676114.png)
+
 
 # Content
 - [B2B Data Lakehouse Architecture](#b2b-data-lakehouse-architecture)
@@ -17,7 +19,9 @@ The final system must deliver structured, clean and consumable data across the b
 
 Architecture used in this project:
 
-  <img  src="/archives/datawarehouse_architecture.png" width="50%" height="50%" class="center">
+<p align="center">
+  <img src="/archives/datawarehouse_architecture.png" />
+</p>
 
 # Data Stack
 
@@ -35,6 +39,12 @@ The stack used in this project:
 # Data modeling
 
 This is a relational data lakehouse, using [Delta Lake](https://docs.delta.io/latest/delta-intro.html).
+The e-commerce data is stored in Transactional database while weblog data is stored in Analytical.
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/28696396/204112062-63e56edb-4581-46a8-bcd6-c60e2c7fe384.png"   width="30%" />
+</p>
+
 8 tables were created for this project. The tables that are ready to be consumed by the business are:
 
 - companies
@@ -52,7 +62,9 @@ The tables that store the raw data that arrives from `order` requests and the `l
 
   These tables are used as a base to generate the final tables.  
 
-<img src="/archives/datamodeling.png" width="76%" height="76%">
+<p align="center">
+  <img src="/archives/datamodeling.png"  width="85%" />
+</p>
 
 # Data pipeline
 
@@ -121,13 +133,15 @@ SELECT DESCRIBE
 transactional.customers
 ```
 
-<img src="/archives/datafeedchange.png" width="60%" height="60%">
-
+<p align="center">
+  <img src="/archives/datafeedchange.png" />
+</p>
 
 # Marketing Lead Sheet
 
 To analyze the requested information and future business opportunities, a panel with dashboards and tabular information was created.
 The panel was made using the `SQL Query Editor` from Databricks. The queries were saved in the file `Marketing Lead - Queries, inside the view folder. Although this is only stored as a pdf in the repository (archives/Marketing Lead View), it is possible to observe in the tool the values being updated as the data is ingested.
+![image](https://user-images.githubusercontent.com/28696396/204111677-956c827f-dc8a-45af-8945-a9c7056a6e60.png)
 
 
 # Infrastructure as Code
