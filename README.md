@@ -1,22 +1,40 @@
 
-# Toptal B2B Data Engineering
-Create the data warehouse for a B2B company that must store the transactional and analytical data of the business.
+# Bigdata Pipeline - Data Engineering project
+The project objective is create the data lakehouse for a B2B company that must store the transactional and analytical data of the business.
 The final system must deliver structured, clean and consumable data across the business in order to generate reports and find opportunities.
 
 # Content
-
+- [B2B Data Lakehouse Architecture](#b2b-data-lakehouse-architecture)
+- [Data Stack](#data-stack)
 - [Data Modeling](#data-modeling)
 - [Data Pipeline](#data-pipeline)
 - [Tests](#tests)
 - [ETL Pipeline and Data Tracking](#etl-pipeline-and-data-tracking)
 - [Marketing Lead Sheet](#marketing-lead-sheet)
 - [Infrastructure as Code](#infrastructure-as-code)
-- [B2B Data Warehouse Architecture](#b2b-data-warehouse-architecture)
 
+# B2B Data Lakehouse Architecture
 
+Architecture used in this project:
+
+  <img  src="/archives/datawarehouse_architecture.png" width="50%" height="50%" class="center">
+
+# Data Stack
+
+The stack used in this project:
+- AWS S3 Bucket: as datalake;
+- AWS EC2: as computacional resource used by Spark;
+- AWS Cloud Formation: to set the environment on DataBricks to use AWS resources;
+- Databricks Data Science & Engineering: to create the jobs and develop all tasks;
+- Databricks SQL Query Editor: to create the views, queries and Dashboards;
+- Spark: to process and manipulate bigdata;
+- Delta Lake: to time travel, merging data and processing streaming data.
+- Great Expectations: to test the data;
+- Terraform: to create the IaC.
 
 # Data modeling
 
+This is a relational data lakehouse, using [Delta Lake](https://docs.delta.io/latest/delta-intro.html).
 8 tables were created for this project. The tables that are ready to be consumed by the business are:
 
 - companies
@@ -32,9 +50,7 @@ The tables that store the raw data that arrives from `order` requests and the `l
 -web_logs_raw
 -orders_raw
 
-  These tables are used as a base to generate the final tables.
-  
-
+  These tables are used as a base to generate the final tables.  
 
 <img src="/archives/datamodeling.png" width="76%" height="76%">
 
@@ -46,11 +62,10 @@ There are 4 distinct pipelines created for the project:
 - Ingestion of streaming weblog data.
 - Ingestion and creation of random data used in this project.
 
-
 #### Daily ingestion of customer, companies and products data:
 
 This pipeline is intended to keep customer, company and product data up to date.
-This data is written directly to the data warehouse (system -> data warehouse).
+This data is written directly to the data lakehouse (system -> data lakehouse).
 To avoid the loss of this data in case of an incident, every time an insertion is made in this base, a backup of this data is also updated within the datalake, in the transactional-backup folder.
 Here, the `products` table has a dependency on `companies`. If the pipeline tries to ingest data on a table that has been deleted, it will recreate it with the data from the backup in the datalake.
 
@@ -58,7 +73,7 @@ Here, the `products` table has a dependency on `companies`. If the pipeline trie
 
 This pipeline is composed of 5 tasks:
 * Generate random order data in json format and store in datalake.
-* Ingest the data into `orders_raw` into the data warehouse.
+* Ingest the data into `orders_raw` into the data lakehouse.
 * Test the data ingested in `orders_raw`.
 * Make the necessary manipulations in `orders_raw` and store in `orders` table.
 * Test the data ingested in `orders`.
@@ -78,14 +93,13 @@ The data was tested using open sorce [great_expectatios](https://greatexpectatio
 ### Ingestion of streaming log data.
 This pipeline is composed of 3 tasks:
 * Generate random logs in text format and store in datalake.
-* Ingest the data in web_logs_raw into the data warehouse.
+* Ingest the data in web_logs_raw into the data lakehouse.
 * Make the necessary manipulations in `web_logs_raw` and storage in `web_logs` table.
 
-The structure of this pipeline is very similar to the previous one (2), however here the pipeline is always ingesting and transforming the log data that arrives every second.
+The structure of this pipeline is very similar to the previous one (2), however here the pipeline is always ingesting and transforming the log data that arrives every second. With the purpose of work with Bigdata, more than 700 milions rows were created for this table.
 
 ### Ingestion and creation of random data used in this project.
 This pipeline contains the scripts that were used to randomly generate the data.
-
 
 All the pipelines were set to retry (up to 3 times) and send an email notifying those responsible in case of failure.
 
@@ -98,8 +112,8 @@ For this project the tests results are in `great_expectations/index.html`
 # ETL Pipeline and Data Tracking
 
 In Databricks, each job generates a history with the information of each execution, and in addition, a panel (archives/Job Run dashboard.html) was also created with the information about the execution of the jobs.
-****
-In addition, to track the information, the tables were set to enable [Change Data Feed (CDC)](https://docs.databricks.com/delta/delta-change-data-feed.html), in order to make it possible to consult the entire history of changes in a table, informing the operation, the time and the user/job that made the change.
+
+In addition, to track the information, Delta Tables have the time travel, which makes it possible to consult the entire history of changes in a table, informing the operation, time and the user/job that performed the change.
 
 Query:
 ```
@@ -120,9 +134,5 @@ The panel was made using the `SQL Query Editor` from Databricks. The queries wer
 
 The Infrastructure as code was created using terraform to generate the structure of the pipelines and cluster settings in an automated way. In order for Terraform to be able to safely find the resources created previously and update them properly, the state file (`.tfstate`) has been configured to store inside the datalake.
 
-# B2B Data Warehouse Architecture
 
-Architecture used in this project:
-
-  <img  src="/archives/datawarehouse_architecture.png" width="50%" height="50%" class="center">
 
