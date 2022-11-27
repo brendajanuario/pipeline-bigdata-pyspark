@@ -108,6 +108,7 @@ This pipeline is composed of 3 tasks:
 * Ingest the data in web_logs_raw into the data lakehouse.
 * Make the necessary manipulations in `web_logs_raw` and storage in `web_logs` table.
 
+The last task uses a [.mmdd](https://maxmind.github.io/MaxMind-DB/) file to obtain the country from the IP address of the user coming through weblog, and this information is necessary to build the Marketing Lead Sheet.
 The structure of this pipeline is very similar to the previous one (2), however here the pipeline is always ingesting and transforming the log data that arrives every second. With the purpose of work with Bigdata, more than 700 milions rows were created for this table.
 
 ### Ingestion and creation of random data used in this project.
@@ -139,10 +140,12 @@ transactional.customers
 
 # Marketing Lead Sheet
 
-To analyze the requested information and future business opportunities, a panel with dashboards and tabular information was created.
-The panel was made using the `SQL Query Editor` from Databricks. The queries were saved in the file `Marketing Lead - Queries, inside the view folder. Although this is only stored as a pdf in the repository (archives/Marketing Lead View), it is possible to observe in the tool the values being updated as the data is ingested.
-![image](https://user-images.githubusercontent.com/28696396/204111677-956c827f-dc8a-45af-8945-a9c7056a6e60.png)
+A marketing lead is a person who shows interest in a brand's products or services, which makes the person a potential customer. The primary goal of any company is to generate as many leads as possible. A company must guide prospects down the sales funnel with relevant content and offers towards their purchase.
 
+To identify the marketing leads of this e-commerce, a panel with dashboards and tabular information was created.
+The panel was made using the `SQL Query Editor` from Databricks. The queries were saved in the file `Marketing Lead - Queries, inside the view folder. Although this is only stored as a pdf in the repository (archives/Marketing Lead View), it is possible to observe in the tool the values being updated as the data is ingested.
+
+![image](https://user-images.githubusercontent.com/28696396/204111677-956c827f-dc8a-45af-8945-a9c7056a6e60.png)
 
 # Infrastructure as Code
 
